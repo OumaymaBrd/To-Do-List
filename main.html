@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion des tâches</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+
+  <!-- Bouton pour ouvrir le modal -->
+  <button id="openModal" class="px-4 py-2 bg-blue-500 text-white rounded shadow-md hover:bg-blue-600">
+    Ajouter une tâche
+  </button>
+
+  <!-- Liste des tâches -->
+  <div id="taskList" class="mt-8 space-y-4"></div>
+
+  <!-- Modal -->
+  <div id="taskModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+      <h2 class="text-2xl font-semibold mb-4">Nouvelle Tâche</h2>
+
+      <form id="taskForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Titre</label>
+          <input type="text" id="taskTitle" class="w-full px-3 py-2 border rounded" required />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Description</label>
+          <textarea id="taskDescription" class="w-full px-3 py-2 border rounded" rows="3" required></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Statut</label>
+          <select id="taskStatus" class="w-full px-3 py-2 border rounded">
+            <option value="To do">To do</option>
+            <option value="Doing">Doing</option>
+            <option value="Done">Done</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Date d'échéance</label>
+          <input type="date" id="taskDueDate" class="w-full px-3 py-2 border rounded" required />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Priorité</label>
+          <select id="taskPriority" class="w-full px-3 py-2 border rounded">
+            <option value="P1">P1 (Haute)</option>
+            <option value="P2">P2 (Moyenne)</option>
+            <option value="P3">P3 (Basse)</option>
+          </select>
+        </div>
+
+        <div class="flex justify-end space-x-2">
+          <button type="button" id="closeModal" class="px-4 py-2 bg-gray-300 rounded">Annuler</button>
+          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Ajouter
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const openModalButton = document.getElementById('openModal');
+    const closeModalButton = document.getElementById('closeModal');
+    const taskModal = document.getElementById('taskModal');
+    const taskForm = document.getElementById('taskForm');
+    const taskList = document.getElementById('taskList');
+
+    // Ouvrir le modal
+    openModalButton.addEventListener('click', () => {
+      taskModal.classList.remove('hidden');
+    });
+
+    // Fermer le modal
+    closeModalButton.addEventListener('click', () => {
+      taskModal.classList.add('hidden');
+    });
+
+    // Ajouter une tâche
+    taskForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById('taskTitle').value;
+      const description = document.getElementById('taskDescription').value;
+      const status = document.getElementById('taskStatus').value;
+      const dueDate = document.getElementById('taskDueDate').value;
+      const priority = document.getElementById('taskPriority').value;
+
+      const taskElement = document.createElement('div');
+      taskElement.className = `p-4 rounded shadow-md ${getPriorityColor(priority)}`;
+
+      taskElement.innerHTML = `
+        <h3 class="text-lg font-bold">${title}</h3>
+        <p class="text-sm text-gray-700">${description}</p>
+        <p class="text-sm">Statut: <strong>${status}</strong></p>
+        <p class="text-sm">Échéance: <strong>${dueDate}</strong></p>
+        <p class="text-sm">Priorité: <strong>${priority}</strong></p>
+      `;
+
+      taskList.appendChild(taskElement);
+      taskModal.classList.add('hidden');
+      taskForm.reset();
+    });
+
+    // Retourner la couleur selon la priorité
+    function getPriorityColor(priority) {
+      switch (priority) {
+        case 'P1':
+          return 'bg-red-100 border-l-4 border-red-500';
+        case 'P2':
+          return 'bg-yellow-100 border-l-4 border-yellow-500';
+        case 'P3':
+          return 'bg-green-100 border-l-4 border-green-500';
+        default:
+          return 'bg-gray-100';
+      }
+    }
+  </script>
+</body>
+</html>

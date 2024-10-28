@@ -1,0 +1,22 @@
+body{
+    padding: 0;
+    margin: 0;
+  }
+  
+  #container{
+    background-color:#212228;
+    background-image: linear-gradient(#292a30 .1em, transparent .1em), 
+    linear-gradient(90deg, #292a30 .1em, transparent .1em);
+    background-size: 4em 4em;
+    height: 100vh;
+  }
+  
+  
+  #card{
+    width: 100px;
+    height: 100px;
+    background-color: #AFDA9F;
+    border-radius: 5px;
+    cursor: pointer;
+    position: fixed;
+  }
