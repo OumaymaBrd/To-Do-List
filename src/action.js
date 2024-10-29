@@ -35,3 +35,9 @@ add_task.onclick = function() {
 
 
 // 
+let btn=document.querySelector('btn');
+btn.onclick=function(){
+  btn.style.background.color='red';
+//   btn.
+}
+
