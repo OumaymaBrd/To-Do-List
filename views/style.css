@@ -828,3 +828,15 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(37 99 235 / var(--tw-bg-opacity));
 }
+
+/* style pour cacher div */
+
+.cacher_Modal{
+  display:none;
+}
+
+.afficher_Modal{
+
+  display:block;
+
+}
