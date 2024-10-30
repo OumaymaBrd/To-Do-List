@@ -60,11 +60,21 @@ function createTaskElement(taskId, taskData) {
         <p class="text-xs text-gray-500">Échéance : ${deadline}</p>
         <span class="text-xs font-semibold ${priority === 'P1' ? 'text-red-500' : priority === 'P2' ? 'text-yellow-500' : 'text-green-500'}">Priorité: ${priority}</span>
         <div class="mt-2">
-            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2">Delete</button>
+            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2" id="delete">Delete</button>
             <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Edit</button>
         </div>
     `;
 
+    // Fonction de suppression du bouton "Delete"
+    const deleteButton = taskDiv.querySelector('#delete');
+    deleteButton.addEventListener('click', function() {
+        taskDiv.remove(); // Supprime l'élément de la tâche du DOM
+
+        // Supprime la tâche du Local Storage
+        localStorage.removeItem(taskId); // Supprime l'entrée spécifique avec l'ID donné
+    });
+
+    // Ajoute la tâche à la colonne appropriée
     if (category === 'todo') {
         todoColumn.appendChild(taskDiv);
     } else if (category === 'inProgress') {
@@ -102,3 +112,7 @@ searchBar.addEventListener('input', function() {
         }
     });
 });
+
+
+// traitement du button Delete 
+
