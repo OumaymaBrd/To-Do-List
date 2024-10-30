@@ -4,3 +4,4 @@ node_modules/
 ilovemaths
 .vscode/
 tailwind.config.js
+.gitignore
