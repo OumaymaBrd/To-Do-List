@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des tâches</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <!-- En-tête avec barre de recherche et boutons -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-10 space-y-4 sm:space-y-0">
+            <!-- Bouton pour ajouter une tâche -->
+            <button id="openModal" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto">
+                Add Task +
+            </button>
+
+            <!-- Barre de recherche -->
+            <input type="text" id="searchBar" placeholder="Rechercher une tâche..." class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
+
+            <!-- Bouton pour ajouter plusieurs tâches -->
+            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto">
+                Add multiple +
+            </button>
+        </div>
+
+        <!-- Colonnes de tâches -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Colonne "To do" -->
+            <div class="bg-white p-4 rounded-lg shadow" id="todoColumn">
+                <h2 class="text-lg font-semibold mb-4 pb-2 border-b-2 border-red-500">To do</h2>
+                <div class="space-y-4">
+                    <!-- Tâches initiales -->
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-red-500">
+                        <h3 class="font-medium">Brief Soutenances Croisées</h3>
+                        <div class="mt-2">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2">Delete</button>
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Edit</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
+                        <h3 class="font-medium">WORKSHOP 3</h3>
+                        <div class="mt-2">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2">Delete</button>
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Edit</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
+                        <h3 class="font-medium">Veille</h3>
+                        <div class="mt-2">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2">Delete</button>
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne "In progress" -->
+            <div class="bg-white p-4 rounded-lg shadow" id="inProgressColumn">
+                <h2 class="text-lg font-semibold mb-4 pb-2 border-b-2 border-yellow-500">In progress</h2>
+                <div class="space-y-4">
+                    <!-- Tâches initiales -->
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
+                        <h3 class="font-medium">WORKSHOP 2</h3>
+                        <div class="mt-2">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2">Delete</button>
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne "Done" -->
+            <div class="bg-white p-4 rounded-lg shadow" id="doneColumn">
+                <h2 class="text-lg font-semibold mb-4 pb-2 border-b-2 border-green-500">Done</h2>
+                <div class="space-y-4">
+                    <!-- Tâches initiales -->
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-red-500">
+                        <h3 class="font-medium">Brief 5</h3>
+                        <div class="mt-2">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2">Delete</button>
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Edit</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
+                        <h3 class="font-medium">WORKSHOP 1</h3>
+                        <div class="mt-2">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2">Delete</button>
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour ajouter une tâche -->
+    <div id="default-modal" class="hidden fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4 sm:mx-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Ajouter une tâche</h2>
+            <label for="taskTitle" class="block text-sm font-medium text-gray-700">Titre de la tâche</label>
+            <input type="text" id="taskTitle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" placeholder="Entrez le titre...">
+            <label for="taskDescription" class="block text-sm font-medium text-gray-700">Description</label>
+            <textarea id="taskDescription" rows="4" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" placeholder="Entrez la description..."></textarea>
+            <label for="taskCategory" class="block text-sm font-medium text-gray-700">Statut</label>
+            <select id="taskCategory" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+                <option value="todo">To do</option>
+                <option value="inProgress">In progress</option>
+                <option value="done">Done</option>
+            </select>
+            <label for="taskDeadline" class="block text-sm font-medium text-gray-700">Date d’échéance</label>
+            <input type="date" id="taskDeadline" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+            <label for="taskPriority" class="block text-sm font-medium text-gray-700">Priorité</label>
+            <select id="taskPriority" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+                <option value="P1">P1</option>
+                <option value="P2">P2</option>
+                <option value="P3">P3</option>
+            </select>
+            <div class="flex justify-center space-x-4">
+                <button id="confirmAction" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Confirmer</button>
+                <button id="closeModal" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JavaScript pour gérer l'affichage du modal, ajouter des tâches et effectuer une recherche -->
+    <script src="src/action.js"></script>
+
+    <!--  -->
+
+    
+</body>
+</html>
