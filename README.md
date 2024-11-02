@@ -1,5 +1,5 @@
 <div style="display: flex; align-items: flex-start;">
-  <img src="assets/gif/girl_developer.gif" alt="Women presenting a plan" style="width: 200px; margin-right: 20px;">
+  <img src="assets/gif/girl_developer.gif" alt="Women presenting a plan" style="width: 200px; margin-right: 20px; position:relative; left:400px;">
   <div>
     <h1>📋 Workflow du Projet</h1>
     <p>## 📝 Étapes du Projet</p>
