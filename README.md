@@ -60,6 +60,6 @@
 
 ## 🌐 Liens de déploiement
 
-- 🚀 **Lien de déploiement sur Vercel** : [Voir le projet](https://to-do-list-git-master-oumaymabrds-projects.vercel.app/)
-- 💻 **Lien GitHub** : [Voir le dépôt](https://oumaymabrd.github.io/To-Do-List/)
+- 🚀 **Lien de déploiement sur Vercel** : [Voir le projet ](https://to-do-list-git-master-oumaymabrds-projects.vercel.app/)
+- 💻 **Lien GitHub** : [Voir le projet](https://oumaymabrd.github.io/To-Do-List/)
 
