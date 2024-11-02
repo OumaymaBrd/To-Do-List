@@ -1,7 +1,7 @@
 <!-- Images de l'interface desktop et mobile -->
-<div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
-  <img src="assets/images/Desktop_ToDo.png" alt="Interface Desktop" style="width: 45%; animation: fadeIn 2s;">
+<div style="display: flex; justify-content: center; align-items: center; margin-bottom: 40px; position: relative;">
   <img src="assets/images/Mobile_ToDo.png" alt="Interface Mobile" style="width: 30%; animation: fadeIn 2s;">
+  <img src="assets/images/Desktop_ToDo.png" alt="Interface Desktop" style="width: 45%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: fadeIn 2s;">
 </div>
 
 <style>
