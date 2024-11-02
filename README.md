@@ -1,8 +1,8 @@
-<div style="display: flex; align-items: center;">
-  <h1>📋 Workflow du Projet</h1>
-    <img src="assets/gif/girl_developer.gif" alt="Women presenting a plan" style="width: 300px; margin-right: 500px;">
-
+<div style="display: flex; align-items: center; justify-content: center;">
+  <h1 style="margin-right: 20px;">📋 Workflow du Projet</h1>
+  <img src="assets/gif/girl_developer.gif" alt="Women presenting a plan" style="width: 300px;">
 </div>
+
 
 <h2>📝 Étapes du Projet</h2>
 
