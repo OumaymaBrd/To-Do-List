@@ -1,4 +1,4 @@
-// Sélection des éléments DOM
+// Selection des elements DOM
 const modal = document.getElementById('default-modal');
 const openModalButton = document.getElementById('openModal');
 const closeModalButton = document.getElementById('closeModal');
@@ -20,12 +20,65 @@ editModal.innerHTML = `
         </div>
     </div>
 `;
-
 document.body.appendChild(editModal);
+
+const successModal = document.createElement('div');
+successModal.classList.add('hidden', 'fixed', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-gray-900', 'bg-opacity-50', 'p-4');
+successModal.innerHTML = `
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <div class="flex justify-center mb-4">
+            <div class="bg-green-100 rounded-full p-2">
+                <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+        </div>
+        <h2 class="text-center text-lg font-semibold text-gray-800">Succès de l'opération</h2>
+        <p class="text-center text-gray-600 mt-2">La tâche a été ajoutée avec succès !</p>
+        <div class="flex justify-center mt-6">
+            <button id="closeSuccessModal" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500">Fermer</button>
+        </div>
+    </div>
+`;
+document.body.appendChild(successModal);
+
+const deleteModal = document.createElement('div');
+deleteModal.classList.add('hidden', 'fixed', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-gray-900', 'bg-opacity-50', 'p-4');
+deleteModal.innerHTML = `
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <div class="flex justify-center mb-4">
+            <div class="bg-red-100 rounded-full p-2">
+                <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636L5.636 18.364M5.636 5.636l12.728 12.728"></path>
+                </svg>
+            </div>
+        </div>
+        <h2 class="text-center text-lg font-semibold text-gray-800">Confirmer la suppression</h2>
+        <p class="text-center text-gray-600 mt-2">Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action est irréversible.</p>
+        <div class="flex justify-center mt-6 space-x-4">
+            <button id="cancelDelete" class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100">Annuler</button>
+            <button id="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500">Supprimer</button>
+        </div>
+    </div>
+`;
+document.body.appendChild(deleteModal);
 
 let currentTaskId = null;
 
-// Ouvrir et fermer le modal d'édition
+// elements pour fermer les modals
+const closeSuccessModalButton = successModal.querySelector('#closeSuccessModal');
+const confirmDeleteButton = deleteModal.querySelector('#confirmDelete');
+const cancelDeleteButton = deleteModal.querySelector('#cancelDelete');
+
+// Fermeture des modals
+closeSuccessModalButton.addEventListener('click', () => {
+    successModal.classList.add('hidden');
+});
+cancelDeleteButton.addEventListener('click', () => {
+    deleteModal.classList.add('hidden');
+});
+
+// Ouvrir et fermer le modal d'edition
 const saveEditButton = editModal.querySelector('#saveEdit');
 const cancelEditButton = editModal.querySelector('#cancelEdit');
 const editDescriptionField = editModal.querySelector('#editDescription');
@@ -41,23 +94,18 @@ saveEditButton.addEventListener('click', () => {
         const taskDiv = document.getElementById(currentTaskId);
 
         if (taskDiv) {
-            // Mettre à jour la description dans le DOM
             taskDiv.querySelector('p.text-sm').textContent = newDescription;
-
-            // Mettre à jour la description dans le local storage
             const taskData = localStorage.getItem(currentTaskId);
             const [title, , category, deadline, priority] = taskData.split('|');
             const updatedTaskData = `${title}|${newDescription}|${category}|${deadline}|${priority}`;
             localStorage.setItem(currentTaskId, updatedTaskData);
-
-            // Réinitialiser et fermer le modal
             editModal.classList.add('hidden');
             currentTaskId = null;
         }
     }
 });
 
-// Fonction pour mettre à jour les compteurs
+// Fonction pour mettre a jour les compteurs
 function updateCounts() {
     document.getElementById('todoCount').textContent = `(${document.getElementById('todoColumn').querySelector('.space-y-4').children.length})`;
     document.getElementById('inProgressCount').textContent = `(${document.getElementById('inProgressColumn').querySelector('.space-y-4').children.length})`;
@@ -68,36 +116,48 @@ function updateCounts() {
 openModalButton.addEventListener('click', () => modal.classList.remove('hidden'));
 closeModalButton.addEventListener('click', () => modal.classList.add('hidden'));
 
-// Ajouter une nouvelle tâche
-confirmActionButton.addEventListener('click', () => {
-    const title = document.getElementById('taskTitle').value;
-    const description = document.getElementById('taskDescription').value;
-    const category = document.getElementById('taskCategory').value;
-    const deadline = document.getElementById('taskDeadline').value;
-    const priority = document.getElementById('taskPriority').value;
+// Ajouter une nouvelle tache
+document.addEventListener('DOMContentLoaded', () => {
+    const titleAlertModal = document.getElementById('titleAlertModal');
+    const closeTitleAlertButton = document.getElementById('closeTitleAlert');
 
-    if (!title) {
-        alert("Le titre est obligatoire pour ajouter une tâche.");
-        return;
-    }
+    closeTitleAlertButton.addEventListener('click', () => {
+        titleAlertModal.classList.add('hidden');
+    });
 
-    const taskData = `${title}|${description}|${category}|${deadline}|${priority}`;
-    const taskId = `task_${Date.now()}`;
+    confirmActionButton.addEventListener('click', () => {
+        const title = document.getElementById('taskTitle').value;
+        const description = document.getElementById('taskDescription').value;
+        const category = document.getElementById('taskCategory').value;
+        const deadline = document.getElementById('taskDeadline').value;
+        const priority = document.getElementById('taskPriority').value;
 
-    localStorage.setItem(taskId, taskData);
-    createTaskElement(taskId, taskData);
+        if (!title) {
+            // Afficher le modal stylise au lieu de l'alerte
+            titleAlertModal.classList.remove('hidden');
+            return;
+        }
 
-    modal.classList.add('hidden');
-    document.getElementById('taskTitle').value = '';
-    document.getElementById('taskDescription').value = '';
-    document.getElementById('taskCategory').value = 'todo';
-    document.getElementById('taskDeadline').value = '';
-    document.getElementById('taskPriority').value = 'P1';
+        const taskData = `${title}|${description}|${category}|${deadline}|${priority}`;
+        const taskId = `task_${Date.now()}`;
 
-    updateCounts(); // Mise à jour des compteurs après l'ajout
+        localStorage.setItem(taskId, taskData);
+        createTaskElement(taskId, taskData);
+
+        modal.classList.add('hidden');
+        successModal.classList.remove('hidden'); // Afficher le modal de succes
+
+        document.getElementById('taskTitle').value = '';
+        document.getElementById('taskDescription').value = '';
+        document.getElementById('taskCategory').value = 'todo';
+        document.getElementById('taskDeadline').value = '';
+        document.getElementById('taskPriority').value = 'P1';
+
+        updateCounts(); // Mise a jour des compteurs apres l'ajout
+    });
 });
 
-// Fonction pour créer et ajouter une tâche
+// Fonction pour creer et ajouter une tache
 function createTaskElement(taskId, taskData) {
     const [title, description, category, deadline, priority] = taskData.split('|');
 
@@ -118,20 +178,24 @@ function createTaskElement(taskId, taskData) {
         </div>
     `;
 
-    // Ajouter un événement au bouton Edit
+    const deleteButton = taskDiv.querySelector('#delete');
+    deleteButton.addEventListener('click', () => {
+        currentTaskId = taskId;
+        deleteModal.classList.remove('hidden'); // Afficher le modal de confirmation de suppression
+
+        confirmDeleteButton.onclick = () => {
+            taskDiv.remove();
+            localStorage.removeItem(taskId);
+            deleteModal.classList.add('hidden'); // Fermer le modal de suppression apres confirmation
+            updateCounts(); // Mise a jour des compteurs apres la suppression
+        };
+    });
+
     const editButton = taskDiv.querySelector('#edit');
     editButton.addEventListener('click', () => {
         currentTaskId = taskId;
-        editDescriptionField.value = description; // Pré-remplir avec la description actuelle
+        editDescriptionField.value = description; // Pre-remplir avec la description actuelle
         editModal.classList.remove('hidden'); // Afficher le modal d'édition
-    });
-
-    // Suppression de la tâche
-    const deleteButton = taskDiv.querySelector('#delete');
-    deleteButton.addEventListener('click', () => {
-        taskDiv.remove();
-        localStorage.removeItem(taskId);
-        updateCounts(); // Mise à jour des compteurs après la suppression
     });
 
     taskDiv.addEventListener('dragstart', event => {
@@ -143,7 +207,6 @@ function createTaskElement(taskId, taskData) {
         taskDiv.classList.remove('opacity-50');
     });
 
-    // Ajouter la tâche à la colonne appropriée
     if (category === 'todo') {
         document.getElementById('todoColumn').querySelector('.space-y-4').appendChild(taskDiv);
     } else if (category === 'inProgress') {
@@ -152,10 +215,10 @@ function createTaskElement(taskId, taskData) {
         document.getElementById('doneColumn').querySelector('.space-y-4').appendChild(taskDiv);
     }
 
-    updateCounts(); // Mise à jour des compteurs après la création
+    updateCounts(); // Mise a jour des compteurs apres la creation
 }
 
-// Configuration des colonnes pour accepter les tâches
+// Configuration des colonnes pour accepter les taches
 [document.getElementById('todoColumn').querySelector('.space-y-4'), document.getElementById('inProgressColumn').querySelector('.space-y-4'), document.getElementById('doneColumn').querySelector('.space-y-4')].forEach(column => {
     column.addEventListener('dragover', event => {
         event.preventDefault();
@@ -181,12 +244,12 @@ function createTaskElement(taskId, taskData) {
             const updatedTaskData = `${title}|${description}|${newCategory}|${deadline}|${priority}`;
             localStorage.setItem(taskId, updatedTaskData);
 
-            updateCounts(); // Mise à jour des compteurs après le déplacement
+            updateCounts(); // Mise a jour des compteurs apres le deplacement
         }
     });
 });
 
-// Charger les tâches du Local Storage et mettre à jour les compteurs lors du chargement de la page
+// Charger les taches du Local Storage et mettre a jour les compteurs lors du chargement de la page
 window.onload = () => {
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
@@ -195,7 +258,7 @@ window.onload = () => {
             createTaskElement(key, taskData);
         }
     }
-    updateCounts(); // Mise à jour initiale des compteurs
+    updateCounts(); // Mise a jour initiale des compteurs
 };
 
 // Recherche de tâches
@@ -208,3 +271,13 @@ searchBar.addEventListener('input', () => {
         task.style.display = title.includes(searchQuery) ? 'block' : 'none';
     });
 });
+
+// condition sur : Date selection
+document.addEventListener('DOMContentLoaded', () => {
+    const taskDeadlineInput = document.getElementById('taskDeadline');
+    const today = new Date();
+    const maxDate = new Date(today.setDate(today.getDate() + 3)).toISOString().split('T')[0];
+    
+    taskDeadlineInput.setAttribute('max', maxDate);
+});
+
