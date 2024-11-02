@@ -1,8 +1,27 @@
+<!-- Images de l'interface desktop et mobile -->
+<div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
+  <img src="assets/images/Desktop_ToDo.png" alt="Interface Desktop" style="width: 45%; animation: fadeIn 2s;">
+  <img src="assets/images/Mobile_ToDo.png" alt="Interface Mobile" style="width: 30%; animation: fadeIn 2s;">
+</div>
+
+<style>
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+
+<!-- En-tête avec titre et GIF -->
 <div style="display: flex; align-items: center; justify-content: center;">
   <h1 style="margin-right: 20px;">📋 Workflow du Projet</h1>
   <img src="assets/gif/girl_developer.gif" alt="Women presenting a plan" style="width: 300px;">
 </div>
-
 
 <h2>📝 Étapes du Projet</h2>
 
@@ -35,7 +54,6 @@
   <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
   <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript">
 </p>
-
 
 <h3>8. 🔄 Interaction de la page avec l'utilisateur</h3>
 <p>Fonctionnalités JavaScript :</p>
