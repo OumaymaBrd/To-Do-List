@@ -1,7 +1,9 @@
-<div style="display: flex; align-items: flex-start;">
-  <img src="assets/gif/girl_developer.gif" alt="Women presenting a plan" style="width: 200px; margin-right: 20px; position:relative; left:500px; ">
-  <div>
-    <h1>📋 Workflow du Projet</h1>
+
+   <h1 style="display: flex; align-items: center;">
+  📋 Workflow du Projet
+  <img src="assets/gif/girl_developer.gif" alt="Women presenting a plan" style="width: 200px; margin-left: 20px;">
+</h1>
+
     <p>## 📝 Étapes du Projet</p>
     <h3>1. 🎯 Planifier mes tâches sur Projet Github</h3>
     <p>Organisation et suivi des tâches du projet via Github Projects</p>
