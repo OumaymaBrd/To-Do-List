@@ -1,5 +1,7 @@
 # 📋 Workflow du Projet
 
+![Women presenting a plan](https://tenor.com/fr/view/girl-meme-jianfei-jian-fei-gif-24707317)
+
 ## 📝 Étapes du Projet
 
 ### 1. 🎯 Planifier mes tâches sur Projet Github
