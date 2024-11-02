@@ -1,6 +1,6 @@
 # 📋 Workflow du Projet
 
-![Women presenting a plan](https://tenor.com/fr/view/girl-meme-jianfei-jian-fei-gif-24707317)
+![Women presenting a plan](assets/gif/girl_developer.gif)
 
 ## 📝 Étapes du Projet
 
