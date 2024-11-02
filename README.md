@@ -36,7 +36,7 @@
 <p>Masquage des fichiers sensibles</p>
 
 <h3>7. 🎨 Integration de l'interface</h3>
-<p>Développement avec HTML et Tailwind CSS</p>
+<p>Développement réalisé avec les outils suivants : </p>
 <p>
   <img src="https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel">
   <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
