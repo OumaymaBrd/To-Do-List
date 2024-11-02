@@ -1,5 +1,7 @@
 
-<p style="margin-right: 20px;">Interface utilisateur du site To-Do List, disponible en versions desktop et mobile.  </p>
+<p style="margin-right: 20px; display: flex; align-items: center;">
+  <span style="margin-right: 10px;">🖥️📱</span> Interface utilisateur du site To-Do List, disponible en versions desktop et mobile.
+</p>
 <!-- Images de l'interface desktop et mobile -->
 <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 40px; position: relative;">
   <img src="assets/images/Mobile_ToDo.png" alt="Interface Mobile" style="width: 30%; animation: fadeIn 2s;">
