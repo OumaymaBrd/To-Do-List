@@ -51,9 +51,15 @@
 <p>Fonctionnalités JavaScript :</p>
 <ul>
   <li>🔄 Dragging : Déplacement des tâches entre colonnes</li>
-  <li>✅ Alert Delete Success</li>
+  <li>✅ Alert : Delete , Success</li>
   <li>📊 Count Task par type (To do, In progress, Done)</li>
   <li>🔍 Recherche sur titre du task</li>
   <li>🎨 Couleur spécifique par propriété</li>
   <li>🛠️ Accès utilisateur pour Modifier/Delete</li>
 </ul>
+
+## 🌐 Liens de déploiement
+
+- 🚀 **Lien de déploiement sur Vercel** : [Voir le projet](https://to-do-list-git-master-oumaymabrds-projects.vercel.app/)
+- 💻 **Lien GitHub** : [Voir le dépôt](https://oumaymabrd.github.io/To-Do-List/)
+
