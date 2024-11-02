@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des tâches</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById('default-modal');
+            const openModalButton = document.getElementById('openModal');
+            const closeModalButton = document.getElementById('closeModal');
+            const confirmActionButton = document.getElementById('confirmAction');
+            const searchBar = document.getElementById('searchBar');
+
+            // Colonnes pour les tâches
+            const todoColumn = document.getElementById('todoColumn').querySelector('.space-y-4');
+            const inProgressColumn = document.getElementById('inProgressColumn').querySelector('.space-y-4');
+            const doneColumn = document.getElementById('doneColumn').querySelector('.space-y-4');
+
+            let editingTaskId = null; // Pour stocker l'ID de la tâche en cours d'édition
+
+            // Ouvrir et fermer le modal
+            openModalButton.addEventListener('click', () => {
+                updateTaskCount(); // Met à jour les compteurs
+                modal.classList.remove('hidden');
+            });
+            closeModalButton.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                clearModal(); // Réinitialiser le modal
+            });
+
+            // Ajouter ou éditer une tâche
+            confirmActionButton.addEventListener('click', () => {
+                const title = document.getElementById('taskTitle').value;
+                const description = document.getElementById('taskDescription').value;
+                const category = document.getElementById('taskCategory').value;
+                const deadline = document.getElementById('taskDeadline').value;
+                const priority = document.getElementById('taskPriority').value;
+
+                const taskData = `${title}|${description}|${category}|${deadline}|${priority}`;
+                
+                if (editingTaskId) {
+                    // Si une tâche est en cours d'édition
+                    localStorage.setItem(editingTaskId, taskData);
+                    updateTaskElement(editingTaskId, taskData);
+                    editingTaskId = null; // Réinitialiser l'ID d'édition
+                } else {
+                    const taskId = `task_${Date.now()}`;
+                    // Sauvegarder la position initiale de la tâche dans localStorage
+                    const position = document.querySelectorAll(`#${category}Column .task`).length;
+                    localStorage.setItem(taskId, `${taskData}|${position}`);
+                    createTaskElement(taskId, taskData, position);
+                }
+
+                modal.classList.add('hidden');
+                clearModal(); // Réinitialiser le modal
+            });
+
+            // Fonction pour créer et ajouter une tâche
+            function createTaskElement(taskId, taskData, position) {
+                const [title, description, category, deadline, priority] = taskData.split('|');
+
+                const taskDiv = document.createElement('div');
+                taskDiv.classList.add('task', 'bg-white', 'p-4', 'rounded-lg', 'shadow', 'border-l-4');
+                taskDiv.classList.add(priority === 'P1' ? 'border-red-500' : priority === 'P2' ? 'border-yellow-500' : 'border-green-500');
+                taskDiv.draggable = true;
+                taskDiv.id = taskId;
+
+                taskDiv.innerHTML = `
+                    <h3 class="font-medium">${title}</h3>
+                    <p class="text-sm text-gray-700">${description}</p>
+                    <p class="text-xs text-gray-500">Échéance : ${deadline}</p>
+                    <span class="text-xs font-semibold ${priority === 'P1' ? 'text-red-500' : priority === 'P2' ? 'text-yellow-500' : 'text-green-500'}">Priorité: ${priority}</span>
+                    <div class="mt-2">
+                        <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2" id="delete">Delete</button>
+                        <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs" id="edit">Edit</button>
+                    </div>
+                `;
+
+                // Suppression de la tâche
+                const deleteButton = taskDiv.querySelector('#delete');
+                deleteButton.addEventListener('click', () => {
+                    taskDiv.remove();
+                    localStorage.removeItem(taskId);
+                    updateTaskCount(); // Met à jour le compteur après la suppression
+                });
+
+                // Édition de la tâche
+                const editButton = taskDiv.querySelector('#edit');
+                editButton.addEventListener('click', () => {
+                    openEditModal(taskId, taskData);
+                });
+
+                // Configuration de glisser-déposer
+                taskDiv.addEventListener('dragstart', (event) => {
+                    event.dataTransfer.setData('text/plain', taskId);
+                    taskDiv.classList.add('opacity-50');
+                });
+
+                taskDiv.addEventListener('dragend', () => {
+                    taskDiv.classList.remove('opacity-50');
+                });
+
+                // Ajouter la tâche à la bonne position dans la colonne
+                const targetColumn = category === 'todo' ? todoColumn : category === 'inProgress' ? inProgressColumn : doneColumn;
+                if (position >= targetColumn.children.length) {
+                    targetColumn.appendChild(taskDiv);
+                } else {
+                    targetColumn.insertBefore(taskDiv, targetColumn.children[position]);
+                }
+
+                // Mettre à jour le compteur après ajout de la tâche
+                updateTaskCount();
+            }
+
+            // Mettre à jour l'élément de tâche lors de l'édition
+            function updateTaskElement(taskId, taskData) {
+                const taskDiv = document.getElementById(taskId);
+                const [title, description, category, deadline, priority] = taskData.split('|');
+
+                taskDiv.querySelector('h3').innerText = title;
+                taskDiv.querySelector('p.text-sm').innerText = description;
+                taskDiv.querySelector('p.text-xs').innerText = `Échéance : ${deadline}`;
+                taskDiv.querySelector('span').innerText = `Priorité: ${priority}`;
+                taskDiv.className = `task bg-white p-4 rounded-lg shadow border-l-4 ${priority === 'P1' ? 'border-red-500' : priority === 'P2' ? 'border-yellow-500' : 'border-green-500'}`;
+            }
+
+            // Ouvrir le modal pour éditer une tâche
+            function openEditModal(taskId, taskData) {
+                const [title, description, category, deadline, priority] = taskData.split('|');
+                document.getElementById('taskTitle').value = title;
+                document.getElementById('taskDescription').value = description;
+                document.getElementById('taskCategory').value = category;
+                document.getElementById('taskDeadline').value = deadline;
+                document.getElementById('taskPriority').value = priority;
+
+                editingTaskId = taskId; // Stocker l'ID de la tâche en cours d'édition
+                modal.classList.remove('hidden');
+            }
+
+            // Fonction pour mettre à jour les compteurs
+            function updateTaskCount() {
+                const todoCount = document.querySelectorAll('#todoColumn .task').length;
+                const inProgressCount = document.querySelectorAll('#inProgressColumn .task').length;
+                const doneCount = document.querySelectorAll('#doneColumn .task').length;
+
+                document.getElementById('todoCount').innerText = `(${todoCount})`;
+                document.getElementById('inProgressCount').innerText = `(${inProgressCount})`;
+                document.getElementById('doneCount').innerText = `(${doneCount})`;
+            }
+
+            // Réinitialiser le modal
+            function clearModal() {
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskDescription').value = '';
+                document.getElementById('taskCategory').value = 'todo';
+                document.getElementById('taskDeadline').value = '';
+                document.getElementById('taskPriority').value = 'P1';
+                editingTaskId = null; // Réinitialiser l'ID d'édition
+            }
+
+            // Charger les tâches du Local Storage
+            window.onload = () => {
+                const tasks = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('task_')) {
+                        const taskData = localStorage.getItem(key);
+                        const [title, description, category, deadline, priority, position] = taskData.split('|');
+                        tasks.push({ key, taskData, category, position: parseInt(position, 10) });
+                    }
+                }
+
+                // Trier les tâches par position avant de les créer dans leur colonne respective
+                tasks.sort((a, b) => a.position - b.position).forEach(task => {
+                    createTaskElement(task.key, task.taskData, task.position);
+                });
+
+                // Mettre à jour les compteurs après le chargement des tâches
+                updateTaskCount();
+            };
+
+            // Configuration des colonnes pour accepter les tâches
+            [todoColumn, inProgressColumn, doneColumn].forEach(column => {
+                column.addEventListener('dragover', event => {
+                    event.preventDefault();
+                    column.classList.add('bg-gray-200');
+                });
+
+                column.addEventListener('dragleave', () => {
+                    column.classList.remove('bg-gray-200');
+                });
+
+                column.addEventListener('drop', event => {
+                    event.preventDefault();
+                    const taskId = event.dataTransfer.getData('text/plain');
+                    const taskDiv = document.getElementById(taskId);
+                    column.appendChild(taskDiv);
+                    column.classList.remove('bg-gray-200');
+
+                    // Mise à jour de la catégorie dans le local storage
+                    const taskData = localStorage.getItem(taskId);
+                    const [title, description, , deadline, priority] = taskData.split('|');
+                    const newCategory = column === todoColumn ? 'todo' : column === inProgressColumn ? 'inProgress' : 'done';
+                    const updatedTaskData = `${title}|${description}|${newCategory}|${deadline}|${priority}`;
+                    localStorage.setItem(taskId, updatedTaskData);
+                });
+            });
+
+            // Recherche de tâches
+            searchBar.addEventListener('input', () => {
+                const searchQuery = searchBar.value.toLowerCase();
+                const allTasks = document.querySelectorAll('.space-y-4 > div');
+
+                allTasks.forEach(task => {
+                    const title = task.querySelector('h3').innerText.toLowerCase();
+                    task.style.display = title.includes(searchQuery) ? 'block' : 'none';
+                });
+            });
+        });
+        
+    </script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <!-- En-tête avec barre de recherche et boutons -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-10 space-y-4 sm:space-y-0">
+            <button id="openModal" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto">
+                Add Task +
+            </button>
+            <input type="text" id="searchBar" placeholder="Rechercher une tâche..." class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
+            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto">
+                Add multiple +
+            </button>
+        </div>
+
+        <!-- Colonnes de tâches -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Colonne "To do" -->
+            <div class="bg-white p-4 rounded-lg shadow" id="todoColumn">
+                <h2 class="text-lg font-semibold mb-4 pb-2 border-b-2 border-red-500">
+                    To do <span id="todoCount" class="text-gray-500">(0)</span>
+                </h2>
+                <div class="space-y-4">
+                    <!-- Tâches initiales -->
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-red-500">
+                        <h3 class="font-medium">Brief Soutenances Croisées</h3>
+                        <p class="text-sm text-gray-700">Description de la tâche...</p>
+                        <div class="mt-2">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2">Delete</button>
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne "In progress" -->
+            <div class="bg-white p-4 rounded-lg shadow" id="inProgressColumn">
+                <h2 class="text-lg font-semibold mb-4 pb-2 border-b-2 border-yellow-500">
+                    In progress <span id="inProgressCount" class="text-gray-500">(0)</span>
+                </h2>
+                <div class="space-y-4">
+                    <!-- Tâches initiales -->
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-yellow-500">
+                        <h3 class="font-medium">WORKSHOP 2</h3>
+                        <p class="text-sm text-gray-700">Description de la tâche en cours...</p>
+                        <div class="mt-2">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2">Delete</button>
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne "Done" -->
+            <div class="bg-white p-4 rounded-lg shadow" id="doneColumn">
+                <h2 class="text-lg font-semibold mb-4 pb-2 border-b-2 border-green-500">
+                    Done <span id="doneCount" class="text-gray-500">(0)</span>
+                </h2>
+                <div class="space-y-4">
+                    <!-- Tâches initiales -->
+                    <div class="bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
+                        <h3 class="font-medium">Brief 5</h3>
+                        <p class="text-sm text-gray-700">Description de la tâche terminée...</p>
+                        <div class="mt-2">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded text-xs mr-2">Delete</button>
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded text-xs">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour ajouter une tâche -->
+    <div id="default-modal" class="hidden fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 p-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4 sm:mx-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Ajouter une tâche</h2>
+            <label for="taskTitle" class="block text-sm font-medium text-gray-700">Titre de la tâche</label>
+            <input type="text" id="taskTitle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" placeholder="Entrez le titre...">
+            <label for="taskDescription" class="block text-sm font-medium text-gray-700">Description</label>
+            <textarea id="taskDescription" rows="4" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" placeholder="Entrez la description..."></textarea>
+            <label for="taskCategory" class="block text-sm font-medium text-gray-700">Statut</label>
+            <select id="taskCategory" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+                <option value="todo">To do</option>
+                <option value="inProgress">In progress</option>
+                <option value="done">Done</option>
+            </select>
+            <label for="taskDeadline" class="block text-sm font-medium text-gray-700">Date d’échéance</label>
+            <input type="date" id="taskDeadline" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+            <label for="taskPriority" class="block text-sm font-medium text-gray-700">Priorité</label>
+            <select id="taskPriority" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+                <option value="P1">P1</option>
+                <option value="P2">P2</option>
+                <option value="P3">P3</option>
+            </select>
+            <div class="flex justify-center space-x-4">
+                <button id="confirmAction" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Confirmer</button>
+                <button id="closeModal" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Fermer</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
