@@ -1,21 +1,11 @@
+
+<p style="margin-right: 20px;">Interface utilisateur du site To-Do List, disponible en versions desktop et mobile.  </p>
 <!-- Images de l'interface desktop et mobile -->
 <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 40px; position: relative;">
   <img src="assets/images/Mobile_ToDo.png" alt="Interface Mobile" style="width: 30%; animation: fadeIn 2s;">
   <img src="assets/images/Desktop_ToDo.png" alt="Interface Desktop" style="width: 45%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: fadeIn 2s;">
 </div>
 
-<style>
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-</style>
 
 <!-- En-tête avec titre et GIF -->
 <div style="display: flex; align-items: center; justify-content: center;">
