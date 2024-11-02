@@ -1,4 +1,4 @@
-// Selection des elements DOM
+// Sélection des éléments DOM
 const modal = document.getElementById('default-modal');
 const openModalButton = document.getElementById('openModal');
 const closeModalButton = document.getElementById('closeModal');
@@ -10,11 +10,19 @@ editModal.classList.add('hidden', 'fixed', 'inset-0', 'flex', 'items-center', 'j
 editModal.innerHTML = `
     <div class="bg-gray-800 text-white p-6 rounded-md shadow-lg w-full max-w-lg mx-4">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-semibold">Modifier la description</h2>
+            <h2 class="text-xl font-semibold">Modifier la tâche</h2>
             <button id="cancelEdit" class="text-gray-400 hover:text-white">&times;</button>
         </div>
         <label for="editDescription" class="block text-sm font-medium mb-1">Nouvelle description</label>
         <textarea id="editDescription" rows="4" class="w-full mb-4 p-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"></textarea>
+
+        <label for="editPriority" class="block text-sm font-medium mb-1">Modifier la priorité</label>
+        <select id="editPriority" class="w-full mb-4 p-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+            <option value="P1" class="text-red-500">P1 - Haute priorité</option>
+            <option value="P2" class="text-yellow-500">P2 - Priorité moyenne</option>
+            <option value="P3" class="text-green-500">P3 - Basse priorité</option>
+        </select>
+
         <div class="flex justify-end space-x-2">
             <button id="saveEdit" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded">Enregistrer</button>
         </div>
@@ -65,7 +73,7 @@ document.body.appendChild(deleteModal);
 
 let currentTaskId = null;
 
-// elements pour fermer les modals
+// Éléments pour fermer les modals
 const closeSuccessModalButton = successModal.querySelector('#closeSuccessModal');
 const confirmDeleteButton = deleteModal.querySelector('#confirmDelete');
 const cancelDeleteButton = deleteModal.querySelector('#cancelDelete');
@@ -78,10 +86,11 @@ cancelDeleteButton.addEventListener('click', () => {
     deleteModal.classList.add('hidden');
 });
 
-// Ouvrir et fermer le modal d'edition
+// Ouvrir et fermer le modal d'édition
 const saveEditButton = editModal.querySelector('#saveEdit');
 const cancelEditButton = editModal.querySelector('#cancelEdit');
 const editDescriptionField = editModal.querySelector('#editDescription');
+const editPriorityField = editModal.querySelector('#editPriority');
 
 cancelEditButton.addEventListener('click', () => {
     editModal.classList.add('hidden');
@@ -91,21 +100,34 @@ cancelEditButton.addEventListener('click', () => {
 saveEditButton.addEventListener('click', () => {
     if (currentTaskId) {
         const newDescription = editDescriptionField.value;
+        const newPriority = editPriorityField.value;
         const taskDiv = document.getElementById(currentTaskId);
 
         if (taskDiv) {
+            // Mise à jour de l'affichage de la tâche
             taskDiv.querySelector('p.text-sm').textContent = newDescription;
+            taskDiv.querySelector('span').textContent = `Priorité: ${newPriority}`;
+            
+            // Mise à jour des classes en fonction de la priorité
+            taskDiv.classList.remove('border-red-500', 'border-yellow-500', 'border-green-500');
+            taskDiv.classList.add(newPriority === 'P1' ? 'border-red-500' : newPriority === 'P2' ? 'border-yellow-500' : 'border-green-500');
+            taskDiv.querySelector('span').classList.remove('text-red-500', 'text-yellow-500', 'text-green-500');
+            taskDiv.querySelector('span').classList.add(newPriority === 'P1' ? 'text-red-500' : newPriority === 'P2' ? 'text-yellow-500' : 'text-green-500');
+
+            // Mise à jour des données dans le localStorage
             const taskData = localStorage.getItem(currentTaskId);
-            const [title, , category, deadline, priority] = taskData.split('|');
-            const updatedTaskData = `${title}|${newDescription}|${category}|${deadline}|${priority}`;
+            const [title, , category, deadline] = taskData.split('|');
+            const updatedTaskData = `${title}|${newDescription}|${category}|${deadline}|${newPriority}`;
             localStorage.setItem(currentTaskId, updatedTaskData);
+
+            // Fermeture du modal après la sauvegarde
             editModal.classList.add('hidden');
             currentTaskId = null;
         }
     }
 });
 
-// Fonction pour mettre a jour les compteurs
+// Fonction pour mettre à jour les compteurs
 function updateCounts() {
     document.getElementById('todoCount').textContent = `(${document.getElementById('todoColumn').querySelector('.space-y-4').children.length})`;
     document.getElementById('inProgressCount').textContent = `(${document.getElementById('inProgressColumn').querySelector('.space-y-4').children.length})`;
@@ -116,7 +138,7 @@ function updateCounts() {
 openModalButton.addEventListener('click', () => modal.classList.remove('hidden'));
 closeModalButton.addEventListener('click', () => modal.classList.add('hidden'));
 
-// Ajouter une nouvelle tache
+// Ajouter une nouvelle tâche
 document.addEventListener('DOMContentLoaded', () => {
     const titleAlertModal = document.getElementById('titleAlertModal');
     const closeTitleAlertButton = document.getElementById('closeTitleAlert');
@@ -133,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const priority = document.getElementById('taskPriority').value;
 
         if (!title) {
-            // Afficher le modal stylise au lieu de l'alerte
             titleAlertModal.classList.remove('hidden');
             return;
         }
@@ -145,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createTaskElement(taskId, taskData);
 
         modal.classList.add('hidden');
-        successModal.classList.remove('hidden'); // Afficher le modal de succes
+        successModal.classList.remove('hidden');
 
         document.getElementById('taskTitle').value = '';
         document.getElementById('taskDescription').value = '';
@@ -153,11 +174,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('taskDeadline').value = '';
         document.getElementById('taskPriority').value = 'P1';
 
-        updateCounts(); // Mise a jour des compteurs apres l'ajout
+        updateCounts();
     });
 });
 
-// Fonction pour creer et ajouter une tache
+// Fonction pour créer et ajouter une tâche
 function createTaskElement(taskId, taskData) {
     const [title, description, category, deadline, priority] = taskData.split('|');
 
@@ -181,21 +202,23 @@ function createTaskElement(taskId, taskData) {
     const deleteButton = taskDiv.querySelector('#delete');
     deleteButton.addEventListener('click', () => {
         currentTaskId = taskId;
-        deleteModal.classList.remove('hidden'); // Afficher le modal de confirmation de suppression
+        deleteModal.classList.remove('hidden');
 
         confirmDeleteButton.onclick = () => {
             taskDiv.remove();
             localStorage.removeItem(taskId);
-            deleteModal.classList.add('hidden'); // Fermer le modal de suppression apres confirmation
-            updateCounts(); // Mise a jour des compteurs apres la suppression
+            deleteModal.classList.add('hidden');
+            updateCounts();
         };
     });
 
     const editButton = taskDiv.querySelector('#edit');
     editButton.addEventListener('click', () => {
         currentTaskId = taskId;
-        editDescriptionField.value = description; // Pre-remplir avec la description actuelle
-        editModal.classList.remove('hidden'); // Afficher le modal d'édition
+        const taskData = localStorage.getItem(currentTaskId).split('|');
+        editDescriptionField.value = taskData[1];
+        editPriorityField.value = taskData[4];
+        editModal.classList.remove('hidden');
     });
 
     taskDiv.addEventListener('dragstart', event => {
@@ -215,10 +238,10 @@ function createTaskElement(taskId, taskData) {
         document.getElementById('doneColumn').querySelector('.space-y-4').appendChild(taskDiv);
     }
 
-    updateCounts(); // Mise a jour des compteurs apres la creation
+    updateCounts();
 }
 
-// Configuration des colonnes pour accepter les taches
+// Configuration des colonnes pour accepter les tâches
 [document.getElementById('todoColumn').querySelector('.space-y-4'), document.getElementById('inProgressColumn').querySelector('.space-y-4'), document.getElementById('doneColumn').querySelector('.space-y-4')].forEach(column => {
     column.addEventListener('dragover', event => {
         event.preventDefault();
@@ -244,12 +267,12 @@ function createTaskElement(taskId, taskData) {
             const updatedTaskData = `${title}|${description}|${newCategory}|${deadline}|${priority}`;
             localStorage.setItem(taskId, updatedTaskData);
 
-            updateCounts(); // Mise a jour des compteurs apres le deplacement
+            updateCounts();
         }
     });
 });
 
-// Charger les taches du Local Storage et mettre a jour les compteurs lors du chargement de la page
+// Charger les tâches du localStorage et mettre à jour les compteurs lors du chargement de la page
 window.onload = () => {
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
@@ -258,7 +281,7 @@ window.onload = () => {
             createTaskElement(key, taskData);
         }
     }
-    updateCounts(); // Mise a jour initiale des compteurs
+    updateCounts();
 };
 
 // Recherche de tâches
@@ -272,12 +295,18 @@ searchBar.addEventListener('input', () => {
     });
 });
 
-// condition sur : Date selection
+// Condition sur la date sélectionnée
 document.addEventListener('DOMContentLoaded', () => {
     const taskDeadlineInput = document.getElementById('taskDeadline');
     const today = new Date();
-    const maxDate = new Date(today.setDate(today.getDate() + 3)).toISOString().split('T')[0];
-    
-    taskDeadlineInput.setAttribute('max', maxDate);
-});
+    const formattedToday = today.toISOString().split('T')[0];
 
+    // Date maximale (dans 3 jours)
+    const maxDate = new Date(today);
+    maxDate.setDate(maxDate.getDate() + 3);
+    const formattedMaxDate = maxDate.toISOString().split('T')[0];
+
+    // Définir les attributs min et max
+    taskDeadlineInput.setAttribute('min', formattedToday);
+    taskDeadlineInput.setAttribute('max', formattedMaxDate);
+});
