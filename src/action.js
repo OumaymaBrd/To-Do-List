@@ -1,4 +1,4 @@
-// Sélection des éléments DOM
+// Selection des elements DOM
 const modal = document.getElementById('default-modal');
 const openModalButton = document.getElementById('openModal');
 const closeModalButton = document.getElementById('closeModal');
@@ -73,7 +73,7 @@ document.body.appendChild(deleteModal);
 
 let currentTaskId = null;
 
-// Éléments pour fermer les modals
+// elements pour fermer les modals
 const closeSuccessModalButton = successModal.querySelector('#closeSuccessModal');
 const confirmDeleteButton = deleteModal.querySelector('#confirmDelete');
 const cancelDeleteButton = deleteModal.querySelector('#cancelDelete');
@@ -86,7 +86,7 @@ cancelDeleteButton.addEventListener('click', () => {
     deleteModal.classList.add('hidden');
 });
 
-// Ouvrir et fermer le modal d'édition
+// Ouvrir et fermer le modal d'edition
 const saveEditButton = editModal.querySelector('#saveEdit');
 const cancelEditButton = editModal.querySelector('#cancelEdit');
 const editDescriptionField = editModal.querySelector('#editDescription');
@@ -104,23 +104,23 @@ saveEditButton.addEventListener('click', () => {
         const taskDiv = document.getElementById(currentTaskId);
 
         if (taskDiv) {
-            // Mise à jour de l'affichage de la tâche
+            // Mise a jour de l'affichage de la tache
             taskDiv.querySelector('p.text-sm').textContent = newDescription;
             taskDiv.querySelector('span').textContent = `Priorité: ${newPriority}`;
             
-            // Mise à jour des classes en fonction de la priorité
+            // Mise a jour des classes en fonction de la priorite
             taskDiv.classList.remove('border-red-500', 'border-yellow-500', 'border-green-500');
             taskDiv.classList.add(newPriority === 'P1' ? 'border-red-500' : newPriority === 'P2' ? 'border-yellow-500' : 'border-green-500');
             taskDiv.querySelector('span').classList.remove('text-red-500', 'text-yellow-500', 'text-green-500');
             taskDiv.querySelector('span').classList.add(newPriority === 'P1' ? 'text-red-500' : newPriority === 'P2' ? 'text-yellow-500' : 'text-green-500');
 
-            // Mise à jour des données dans le localStorage
+            // Mise a jour des donnees dans le localStorage
             const taskData = localStorage.getItem(currentTaskId);
             const [title, , category, deadline] = taskData.split('|');
             const updatedTaskData = `${title}|${newDescription}|${category}|${deadline}|${newPriority}`;
             localStorage.setItem(currentTaskId, updatedTaskData);
 
-            // Fermeture du modal après la sauvegarde
+            // Fermeture du modal apres la sauvegarde
             editModal.classList.add('hidden');
             currentTaskId = null;
         }
