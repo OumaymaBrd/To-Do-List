@@ -6,38 +6,32 @@
     <title>Gestion des tâches</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-100">
     <div class="container mx-auto p-4">
-        <!-- En-tete avec barre de recherche et boutons -->
         <div class="flex flex-col sm:flex-row justify-between items-center mb-10 space-y-4 sm:space-y-0">
-            <!-- Bouton pour ajouter une tache -->
             <button id="openModal" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto">
                 Add Task +
             </button>
-
-            <!-- Barre de recherche -->
             <input type="text" id="searchBar" placeholder="Rechercher une tâche..." class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-800 w-full sm:w-auto">
-
-            <!-- Bouton pour ajouter plusieurs taches -->
             <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto">
                 Add multiple +
             </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Colonne "To do" -->
+            <!-- Colonne To do-->
             <div class="bg-white p-4 rounded-lg shadow" id="todoColumn">
                 <h2 class="text-lg font-semibold mb-4 pb-2 border-b-2 border-red-500">To do <span id="todoCount">(0)</span></h2>
                 <div class="space-y-4"></div>
             </div>
-        
-            <!-- Colonne "In progress" -->
+            <!-- Colonne In progress -->
             <div class="bg-white p-4 rounded-lg shadow" id="inProgressColumn">
                 <h2 class="text-lg font-semibold mb-4 pb-2 border-b-2 border-yellow-500">In progress <span id="inProgressCount">(0)</span></h2>
                 <div class="space-y-4"></div>
             </div>
         
-            <!-- Colonne "Done" -->
+            <!-- Colonne Done -->
             <div class="bg-white p-4 rounded-lg shadow" id="doneColumn">
                 <h2 class="text-lg font-semibold mb-4 pb-2 border-b-2 border-green-500">Done <span id="doneCount">(0)</span></h2>
                 <div class="space-y-4"></div>
@@ -74,7 +68,6 @@
             <option value="P2" class="text-yellow-500">P2 - Priorité moyenne</option>
             <option value="P3" class="text-green-500">P3 - Basse priorité</option>
         </select>
-        
 
         <div class="flex justify-end space-x-2">
             <button id="confirmAction" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded">Confirmer</button>
@@ -96,7 +89,9 @@
     </div>
 </div>
 
-   <script src="src/js/action.js"></script>   <!-- link script -->
-   
+
+
+   <script src="src/js/action.js"></script>   <!-- link:  script -->
+  
 </body>
 </html>

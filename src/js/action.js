@@ -1,10 +1,8 @@
-// Selection des elements DOM
-const modal = document.getElementById('default-modal');
-const openModalButton = document.getElementById('openModal');
+const modal = document.getElementById('default-modal');  // voila modal afficher  
+const openModalButton = document.getElementById('openModal'); 
 const closeModalButton = document.getElementById('closeModal');
 const confirmActionButton = document.getElementById('confirmAction');
 const searchBar = document.getElementById('searchBar');
-
 const editModal = document.createElement('div');
 editModal.classList.add('hidden', 'fixed', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-gray-900', 'bg-opacity-50', 'p-4');
 editModal.innerHTML = `
@@ -49,7 +47,6 @@ successModal.innerHTML = `
     </div>
 `;
 document.body.appendChild(successModal);
-
 const deleteModal = document.createElement('div');
 deleteModal.classList.add('hidden', 'fixed', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-gray-900', 'bg-opacity-50', 'p-4');
 deleteModal.innerHTML = `
@@ -127,8 +124,8 @@ saveEditButton.addEventListener('click', () => {
     }
 });
 
-// Fonction pour mettre à jour les compteurs
-function updateCounts() {
+//  mettre a jour les compteurs
+function updat_Count() {
     document.getElementById('todoCount').textContent = `(${document.getElementById('todoColumn').querySelector('.space-y-4').children.length})`;
     document.getElementById('inProgressCount').textContent = `(${document.getElementById('inProgressColumn').querySelector('.space-y-4').children.length})`;
     document.getElementById('doneCount').textContent = `(${document.getElementById('doneColumn').querySelector('.space-y-4').children.length})`;
@@ -174,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('taskDeadline').value = '';
         document.getElementById('taskPriority').value = 'P1';
 
-        updateCounts();
+        updat_Count();
     });
 });
 
@@ -208,7 +205,7 @@ function createTaskElement(taskId, taskData) {
             taskDiv.remove();
             localStorage.removeItem(taskId);
             deleteModal.classList.add('hidden');
-            updateCounts();
+            updat_Count();
         };
     });
 
@@ -221,15 +218,7 @@ function createTaskElement(taskId, taskData) {
         editModal.classList.remove('hidden');
     });
 
-    taskDiv.addEventListener('dragstart', event => {
-        event.dataTransfer.setData('text/plain', taskId);
-        taskDiv.classList.add('opacity-50');
-    });
-
-    taskDiv.addEventListener('dragend', () => {
-        taskDiv.classList.remove('opacity-50');
-    });
-
+    
     if (category === 'todo') {
         document.getElementById('todoColumn').querySelector('.space-y-4').appendChild(taskDiv);
     } else if (category === 'inProgress') {
@@ -238,39 +227,8 @@ function createTaskElement(taskId, taskData) {
         document.getElementById('doneColumn').querySelector('.space-y-4').appendChild(taskDiv);
     }
 
-    updateCounts();
+    updat_Count();
 }
-
-// Configuration des colonnes pour accepter les tâches
-[document.getElementById('todoColumn').querySelector('.space-y-4'), document.getElementById('inProgressColumn').querySelector('.space-y-4'), document.getElementById('doneColumn').querySelector('.space-y-4')].forEach(column => {
-    column.addEventListener('dragover', event => {
-        event.preventDefault();
-        column.classList.add('bg-gray-200');
-    });
-
-    column.addEventListener('dragleave', () => {
-        column.classList.remove('bg-gray-200');
-    });
-
-    column.addEventListener('drop', event => {
-        event.preventDefault();
-        const taskId = event.dataTransfer.getData('text/plain');
-        const taskDiv = document.getElementById(taskId);
-
-        if (taskDiv) {
-            column.appendChild(taskDiv);
-            column.classList.remove('bg-gray-200');
-
-            const taskData = localStorage.getItem(taskId);
-            const [title, description, , deadline, priority] = taskData.split('|');
-            const newCategory = column === document.getElementById('todoColumn').querySelector('.space-y-4') ? 'todo' : column === document.getElementById('inProgressColumn').querySelector('.space-y-4') ? 'inProgress' : 'done';
-            const updatedTaskData = `${title}|${description}|${newCategory}|${deadline}|${priority}`;
-            localStorage.setItem(taskId, updatedTaskData);
-
-            updateCounts();
-        }
-    });
-});
 
 // Charger les tâches du localStorage et mettre à jour les compteurs lors du chargement de la page
 window.onload = () => {
@@ -281,7 +239,9 @@ window.onload = () => {
             createTaskElement(key, taskData);
         }
     }
-    updateCounts();
+    updat_Count();
+    document.textContent
+    
 };
 
 // Recherche de tâches
@@ -310,3 +270,27 @@ document.addEventListener('DOMContentLoaded', () => {
     taskDeadlineInput.setAttribute('min', formattedToday);
     taskDeadlineInput.setAttribute('max', formattedMaxDate);
 });
+
+
+// 
+document.getElementById('delete_titre_button').addEventListener('click',function supprimerTacheParTitre(test){
+   {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            const taskData = localStorage.getItem(key);
+            
+            // Convertir en JSON si les données sont en format JSON
+            const [taskTitle] = taskData.split('|'); 
+            
+            if (taskTitle === test) {
+                localStorage.removeItem(key); // Supprime la tâche du stockage local
+                alert(`La tâche "${titre}" a été supprimée.`);
+                break;
+            }
+        }
+    }
+    // version to do list 
+
+})
+
+
